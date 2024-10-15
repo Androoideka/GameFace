@@ -1,20 +1,12 @@
 import contextlib
 import numpy
 import cv2
-
-# Look into https://github.com/ra1nty/DXcam/blob/main/README.md
-import mss
-
-# from keras.models import load_model
-
-# model = load_model("facenet_keras.h5")
+import mss  # Look into https://github.com/ra1nty/DXcam/blob/main/README.md
+from deepface import DeepFace
 
 
 def __preprocess(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGB)
-    image = cv2.resize(image, (160, 160))
-    image = image.astype("float32") / 255.0
-    image = numpy.expand_dims(image, axis=0)
+    image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
     return image
 
 
@@ -32,8 +24,10 @@ def screenshot_context():
 
 def calculate_embedding(sct, frame):
     image = __screenshot(sct, frame)
-    # return model.predict(image)
-    return []
+    embeddings = DeepFace.represent(
+        img_path=image, model_name="Facenet512", max_faces=1
+    )
+    return embeddings[0]["embedding"]
 
 
 def calculate_combined_embedding(embeddings):
@@ -41,6 +35,6 @@ def calculate_combined_embedding(embeddings):
 
 
 def show_capture(sct, frame):
-    cv2.imshow("Screenshot", __screenshot(sct, frame)[0])
+    cv2.imshow("Screenshot", __screenshot(sct, frame))
     cv2.waitKey(0)  # Wait for a key press to close the window
     cv2.destroyAllWindows()
