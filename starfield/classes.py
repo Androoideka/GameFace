@@ -1,7 +1,7 @@
 from dataclasses import dataclass, fields
 from enum import Enum
 from typing import Type
-import constants
+from starfield import constants
 
 
 @dataclass

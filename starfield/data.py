@@ -3,8 +3,7 @@ import json
 from dataclasses import dataclass, fields
 from typing import Dict
 from itertools import islice
-import constants
-import classes
+from starfield import constants, classes
 
 
 def partition_iterator(iterator, size):
@@ -180,6 +179,9 @@ class Character:
     def from_file(cls, path):
         with open(path, "r") as json_file:
             return cls.from_format(json.load(json_file))
+
+    def __getitem__(self, demographic):
+        return (self.bones[demographic], self.sliders[demographic])
 
     def to_result(self):
         return (
