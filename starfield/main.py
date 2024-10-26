@@ -1,7 +1,7 @@
-import ai
-import starfield_structure
 import os
 import pydirectinput
+import ai
+import data
 
 
 def generate_training_data(presets):
@@ -50,6 +50,6 @@ horizontal_center = frame["left"] + frame["width"] / 2
 horizontal_start = frame["left"]
 horizontal_end = frame["left"] + frame["width"]
 
-training_data = generate_training_data([starfield_structure.StarfieldCharacter()])
+training_data = generate_training_data([data.Character.from_random()])
 
 print(training_data)
