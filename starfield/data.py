@@ -4,7 +4,7 @@ from dataclasses import dataclass, fields
 from typing import Dict
 from itertools import islice
 import constants
-import types
+import classes
 
 
 def partition_iterator(iterator, size):
@@ -24,20 +24,20 @@ class Character:
     hair: constants.HairStyle
     eyebrow: constants.BrowStyle
     eyelash: constants.EyelashStyle
-    bones: Dict[constants.Demographic, types.FeatureBundle]
-    sliders: Dict[constants.Demographic, types.FeatureBundle]
-    body: types.Body
-    head_shape: types.HeadShape
-    neck: types.Neck
-    chin: types.Chin
-    jaw: types.Jaw
-    mouth: types.Mouth
-    cheeks: types.Cheeks
-    nose: types.Nose
-    ears: types.Ears
-    eyebrows: types.Eyebrows
-    eyes: types.Eyes
-    forehead: types.Forehead
+    bones: Dict[constants.Demographic, classes.FeatureBundle]
+    sliders: Dict[constants.Demographic, classes.FeatureBundle]
+    body: classes.Body
+    head_shape: classes.HeadShape
+    neck: classes.Neck
+    chin: classes.Chin
+    jaw: classes.Jaw
+    mouth: classes.Mouth
+    cheeks: classes.Cheeks
+    nose: classes.Nose
+    ears: classes.Ears
+    eyebrows: classes.Eyebrows
+    eyes: classes.Eyes
+    forehead: classes.Forehead
     skin_tone: int = 1
 
     @classmethod
@@ -51,33 +51,33 @@ class Character:
             eyebrow=random.choice(list(constants.BrowStyle)),
             eyelash=random.choice(list(constants.EyelashStyle)),
             skin_tone=random.randrange(0, 9),
-            body=types.Body(*partition_iterator(it, len(fields(types.Body)))),
-            head_shape=types.HeadShape(
-                *partition_iterator(it, len(fields(types.HeadShape)))
+            body=classes.Body(*partition_iterator(it, len(fields(classes.Body)))),
+            head_shape=classes.HeadShape(
+                *partition_iterator(it, len(fields(classes.HeadShape)))
             ),
-            neck=types.Neck(*partition_iterator(it, len(fields(types.Neck)))),
-            chin=types.Chin(*partition_iterator(it, len(fields(types.Chin)))),
-            jaw=types.Jaw(*partition_iterator(it, len(fields(types.Jaw)))),
-            mouth=types.Mouth(*partition_iterator(it, len(fields(types.Mouth)))),
-            cheeks=types.Cheeks(*partition_iterator(it, len(fields(types.Cheeks)))),
-            nose=types.Nose(*partition_iterator(it, len(fields(types.Nose)))),
-            ears=types.Ears(*partition_iterator(it, len(fields(types.Ears)))),
-            eyebrows=types.Eyebrows(
-                *partition_iterator(it, len(fields(types.Eyebrows)))
+            neck=classes.Neck(*partition_iterator(it, len(fields(classes.Neck)))),
+            chin=classes.Chin(*partition_iterator(it, len(fields(classes.Chin)))),
+            jaw=classes.Jaw(*partition_iterator(it, len(fields(classes.Jaw)))),
+            mouth=classes.Mouth(*partition_iterator(it, len(fields(classes.Mouth)))),
+            cheeks=classes.Cheeks(*partition_iterator(it, len(fields(classes.Cheeks)))),
+            nose=classes.Nose(*partition_iterator(it, len(fields(classes.Nose)))),
+            ears=classes.Ears(*partition_iterator(it, len(fields(classes.Ears)))),
+            eyebrows=classes.Eyebrows(
+                *partition_iterator(it, len(fields(classes.Eyebrows)))
             ),
-            eyes=types.Eyes(*partition_iterator(it, len(fields(types.Eyes)))),
-            forehead=types.Forehead(
-                *partition_iterator(it, len(fields(types.Forehead)))
+            eyes=classes.Eyes(*partition_iterator(it, len(fields(classes.Eyes)))),
+            forehead=classes.Forehead(
+                *partition_iterator(it, len(fields(classes.Forehead)))
             ),
             bones={
-                member: types.FeatureBundle(
-                    *partition_iterator(it, len(fields(types.FeatureBundle)))
+                member: classes.FeatureBundle(
+                    *partition_iterator(it, len(fields(classes.FeatureBundle)))
                 )
                 for member in constants.Demographic
             },
             sliders={
-                member: types.FeatureBundle(
-                    *partition_iterator(it, len(fields(types.FeatureBundle)))
+                member: classes.FeatureBundle(
+                    *partition_iterator(it, len(fields(classes.FeatureBundle)))
                 )
                 for member in constants.Demographic
             },
@@ -96,35 +96,37 @@ class Character:
             hair=constants.one_hot_decode(constants.HairStyle, iterator),
             eyebrow=constants.one_hot_decode(constants.BrowStyle, iterator),
             eyelash=constants.one_hot_decode(constants.EyelashStyle, iterator),
-            body=types.Body(*partition_iterator(iterator, len(fields(types.Body)))),
-            head_shape=types.HeadShape(
-                *partition_iterator(iterator, len(fields(types.HeadShape)))
+            body=classes.Body(*partition_iterator(iterator, len(fields(classes.Body)))),
+            head_shape=classes.HeadShape(
+                *partition_iterator(iterator, len(fields(classes.HeadShape)))
             ),
-            neck=types.Neck(*partition_iterator(iterator, len(fields(types.Neck)))),
-            chin=types.Chin(*partition_iterator(iterator, len(fields(types.Chin)))),
-            jaw=types.Jaw(*partition_iterator(iterator, len(fields(types.Jaw)))),
-            mouth=types.Mouth(*partition_iterator(iterator, len(fields(types.Mouth)))),
-            cheeks=types.Cheeks(
-                *partition_iterator(iterator, len(fields(types.Cheeks)))
+            neck=classes.Neck(*partition_iterator(iterator, len(fields(classes.Neck)))),
+            chin=classes.Chin(*partition_iterator(iterator, len(fields(classes.Chin)))),
+            jaw=classes.Jaw(*partition_iterator(iterator, len(fields(classes.Jaw)))),
+            mouth=classes.Mouth(
+                *partition_iterator(iterator, len(fields(classes.Mouth)))
             ),
-            nose=types.Nose(*partition_iterator(iterator, len(fields(types.Nose)))),
-            ears=types.Ears(*partition_iterator(iterator, len(fields(types.Ears)))),
-            eyebrows=types.Eyebrows(
-                *partition_iterator(iterator, len(fields(types.Eyebrows)))
+            cheeks=classes.Cheeks(
+                *partition_iterator(iterator, len(fields(classes.Cheeks)))
             ),
-            eyes=types.Eyes(*partition_iterator(iterator, len(fields(types.Eyes)))),
-            forehead=types.Forehead(
-                *partition_iterator(iterator, len(fields(types.Forehead)))
+            nose=classes.Nose(*partition_iterator(iterator, len(fields(classes.Nose)))),
+            ears=classes.Ears(*partition_iterator(iterator, len(fields(classes.Ears)))),
+            eyebrows=classes.Eyebrows(
+                *partition_iterator(iterator, len(fields(classes.Eyebrows)))
+            ),
+            eyes=classes.Eyes(*partition_iterator(iterator, len(fields(classes.Eyes)))),
+            forehead=classes.Forehead(
+                *partition_iterator(iterator, len(fields(classes.Forehead)))
             ),
             bones={
-                demographic: types.FeatureBundle(
-                    *partition_iterator(iterator, len(fields(types.FeatureBundle)))
+                demographic: classes.FeatureBundle(
+                    *partition_iterator(iterator, len(fields(classes.FeatureBundle)))
                 )
                 for demographic in constants.Demographic
             },
             sliders={
-                demographic: types.FeatureBundle(
-                    *partition_iterator(iterator, len(fields(types.FeatureBundle)))
+                demographic: classes.FeatureBundle(
+                    *partition_iterator(iterator, len(fields(classes.FeatureBundle)))
                 )
                 for demographic in constants.Demographic
             },
@@ -148,26 +150,26 @@ class Character:
                 .removesuffix("_Top")
             ),
             skin_tone=format["SkinTone"],
-            body=types.Body.from_format(format),
-            head_shape=types.HeadShape.from_bone(format["FacialBoneRegionDataA"]),
-            neck=types.Neck.from_bone(format["FacialBoneRegionDataA"]),
-            chin=types.Chin.from_bone(format["FacialBoneRegionDataA"]),
-            jaw=types.Jaw.from_bone(format["FacialBoneRegionDataA"]),
-            mouth=types.Mouth.from_bone(format["FacialBoneRegionDataA"]),
-            cheeks=types.Cheeks.from_bone(format["FacialBoneRegionDataA"]),
-            nose=types.Nose.from_bone(format["FacialBoneRegionDataA"]),
-            ears=types.Ears.from_bone(format["FacialBoneRegionDataA"]),
-            eyebrows=types.Eyebrows.from_bone(format["FacialBoneRegionDataA"]),
-            eyes=types.Eyes.from_bone(format["FacialBoneRegionDataA"]),
-            forehead=types.Forehead.from_bone(format["FacialBoneRegionDataA"]),
+            body=classes.Body.from_format(format),
+            head_shape=classes.HeadShape.from_bone(format["FacialBoneRegionDataA"]),
+            neck=classes.Neck.from_bone(format["FacialBoneRegionDataA"]),
+            chin=classes.Chin.from_bone(format["FacialBoneRegionDataA"]),
+            jaw=classes.Jaw.from_bone(format["FacialBoneRegionDataA"]),
+            mouth=classes.Mouth.from_bone(format["FacialBoneRegionDataA"]),
+            cheeks=classes.Cheeks.from_bone(format["FacialBoneRegionDataA"]),
+            nose=classes.Nose.from_bone(format["FacialBoneRegionDataA"]),
+            ears=classes.Ears.from_bone(format["FacialBoneRegionDataA"]),
+            eyebrows=classes.Eyebrows.from_bone(format["FacialBoneRegionDataA"]),
+            eyes=classes.Eyes.from_bone(format["FacialBoneRegionDataA"]),
+            forehead=classes.Forehead.from_bone(format["FacialBoneRegionDataA"]),
             bones={
-                member: types.FeatureBundle.from_bone(
+                member: classes.FeatureBundle.from_bone(
                     member, format["FacialBoneRegionDataA"]
                 )
                 for member in constants.Demographic
             },
             sliders={
-                member: types.FeatureBundle.from_sliders(
+                member: classes.FeatureBundle.from_sliders(
                     member, format["FacialMorphSliderDataA"]
                 )
                 for member in constants.Demographic
