@@ -1,23 +1,9 @@
 import random
 import json
+import utilities
 from dataclasses import dataclass, fields
 from typing import Dict
-from itertools import islice
 from starfield import constants, classes
-
-
-def partition_iterator(iterator, size):
-    return islice(iterator, size)
-
-
-def random_unit_iterator():
-    while True:
-        yield random.random()
-
-
-def random_symmetric_iterator():
-    while True:
-        yield random.uniform(-1, 1)
 
 
 @dataclass
@@ -46,8 +32,6 @@ class Character:
 
     @classmethod
     def from_random(cls):
-        un_it = random_unit_iterator()
-        sym_it = random_symmetric_iterator()
         return cls(
             brow_hair_colour=random.choice(list(constants.HairBrowColour)),
             eye_colour=random.choice(list(constants.EyeColour)),
@@ -56,39 +40,62 @@ class Character:
             eyebrow=random.choice(list(constants.BrowStyle)),
             eyelash=random.choice(list(constants.EyelashStyle)),
             skin_tone=random.randrange(0, 9),
-            body=classes.Body(*partition_iterator(un_it, len(fields(classes.Body)))),
-            head_shape=classes.HeadShape(
-                *partition_iterator(un_it, len(fields(classes.HeadShape)))
+            body=classes.Body(
+                *[random.random() for _ in range(len(fields(classes.Body)))]
             ),
-            neck=classes.Neck(*partition_iterator(sym_it, len(fields(classes.Neck)))),
-            chin=classes.Chin(*partition_iterator(sym_it, len(fields(classes.Chin)))),
-            jaw=classes.Jaw(*partition_iterator(sym_it, len(fields(classes.Jaw)))),
+            head_shape=classes.HeadShape(
+                *[random.random() for _ in range(len(fields(classes.HeadShape)))]
+            ),
+            neck=classes.Neck(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Neck)))]
+            ),
+            chin=classes.Chin(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Chin)))]
+            ),
+            jaw=classes.Jaw(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Jaw)))]
+            ),
             mouth=classes.Mouth(
-                *partition_iterator(sym_it, len(fields(classes.Mouth)))
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Mouth)))]
             ),
             cheeks=classes.Cheeks(
-                *partition_iterator(sym_it, len(fields(classes.Cheeks)))
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Cheeks)))]
             ),
-            nose=classes.Nose(*partition_iterator(sym_it, len(fields(classes.Nose)))),
-            ears=classes.Ears(*partition_iterator(sym_it, len(fields(classes.Ears)))),
+            nose=classes.Nose(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Nose)))]
+            ),
+            ears=classes.Ears(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Ears)))]
+            ),
             eyebrows=classes.Eyebrows(
-                *partition_iterator(sym_it, len(fields(classes.Eyebrows)))
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Eyebrows)))]
             ),
-            eyes=classes.Eyes(*partition_iterator(sym_it, len(fields(classes.Eyes)))),
+            eyes=classes.Eyes(
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Eyes)))]
+            ),
             forehead=classes.Forehead(
-                *partition_iterator(sym_it, len(fields(classes.Forehead)))
+                *[random.uniform(-1, 1) for _ in range(len(fields(classes.Forehead)))]
             ),
             bones={
                 member: classes.FeatureBundle(
-                    *partition_iterator(un_it, len(fields(classes.FeatureBundle)))
+                    *[
+                        random.random()
+                        for _ in range(len(fields(classes.FeatureBundle)))
+                    ]
                 )
                 for member in constants.Demographic
             },
             sliders={
-                member: classes.FeatureBundle(
-                    *partition_iterator(un_it, len(fields(classes.FeatureBundle)))
+                member: classes.FeatureBundle(*features)
+                for member, features in zip(
+                    constants.Demographic,
+                    utilities.transpose(
+                        [
+                            utilities.random_sum(len(constants.Demographic))
+                            for _ in fields(classes.FeatureBundle)
+                        ]
+                    ),
                 )
-                for member in constants.Demographic
             },
         )
 
@@ -105,37 +112,55 @@ class Character:
             hair=constants.one_hot_decode(constants.HairStyle, iterator),
             eyebrow=constants.one_hot_decode(constants.BrowStyle, iterator),
             eyelash=constants.one_hot_decode(constants.EyelashStyle, iterator),
-            body=classes.Body(*partition_iterator(iterator, len(fields(classes.Body)))),
-            head_shape=classes.HeadShape(
-                *partition_iterator(iterator, len(fields(classes.HeadShape)))
+            body=classes.Body(
+                *utilities.partition_iterator(iterator, len(fields(classes.Body)))
             ),
-            neck=classes.Neck(*partition_iterator(iterator, len(fields(classes.Neck)))),
-            chin=classes.Chin(*partition_iterator(iterator, len(fields(classes.Chin)))),
-            jaw=classes.Jaw(*partition_iterator(iterator, len(fields(classes.Jaw)))),
+            head_shape=classes.HeadShape(
+                *utilities.partition_iterator(iterator, len(fields(classes.HeadShape)))
+            ),
+            neck=classes.Neck(
+                *utilities.partition_iterator(iterator, len(fields(classes.Neck)))
+            ),
+            chin=classes.Chin(
+                *utilities.partition_iterator(iterator, len(fields(classes.Chin)))
+            ),
+            jaw=classes.Jaw(
+                *utilities.partition_iterator(iterator, len(fields(classes.Jaw)))
+            ),
             mouth=classes.Mouth(
-                *partition_iterator(iterator, len(fields(classes.Mouth)))
+                *utilities.partition_iterator(iterator, len(fields(classes.Mouth)))
             ),
             cheeks=classes.Cheeks(
-                *partition_iterator(iterator, len(fields(classes.Cheeks)))
+                *utilities.partition_iterator(iterator, len(fields(classes.Cheeks)))
             ),
-            nose=classes.Nose(*partition_iterator(iterator, len(fields(classes.Nose)))),
-            ears=classes.Ears(*partition_iterator(iterator, len(fields(classes.Ears)))),
+            nose=classes.Nose(
+                *utilities.partition_iterator(iterator, len(fields(classes.Nose)))
+            ),
+            ears=classes.Ears(
+                *utilities.partition_iterator(iterator, len(fields(classes.Ears)))
+            ),
             eyebrows=classes.Eyebrows(
-                *partition_iterator(iterator, len(fields(classes.Eyebrows)))
+                *utilities.partition_iterator(iterator, len(fields(classes.Eyebrows)))
             ),
-            eyes=classes.Eyes(*partition_iterator(iterator, len(fields(classes.Eyes)))),
+            eyes=classes.Eyes(
+                *utilities.partition_iterator(iterator, len(fields(classes.Eyes)))
+            ),
             forehead=classes.Forehead(
-                *partition_iterator(iterator, len(fields(classes.Forehead)))
+                *utilities.partition_iterator(iterator, len(fields(classes.Forehead)))
             ),
             bones={
                 demographic: classes.FeatureBundle(
-                    *partition_iterator(iterator, len(fields(classes.FeatureBundle)))
+                    *utilities.partition_iterator(
+                        iterator, len(fields(classes.FeatureBundle))
+                    )
                 )
                 for demographic in constants.Demographic
             },
             sliders={
                 demographic: classes.FeatureBundle(
-                    *partition_iterator(iterator, len(fields(classes.FeatureBundle)))
+                    *utilities.partition_iterator(
+                        iterator, len(fields(classes.FeatureBundle))
+                    )
                 )
                 for demographic in constants.Demographic
             },

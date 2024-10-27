@@ -187,18 +187,3 @@ class EyesSliders(Enum):
 class ForeheadSliders(Enum):
     narrow_wide = 72
     back_forward = 73
-
-
-def one_hot_encode(enum_value):
-    enum_members = list(enum_value.__class__)
-    one_hot = [0] * len(enum_members)
-    index = enum_members.index(enum_value)
-    one_hot[index] = 1
-    return one_hot
-
-
-def one_hot_decode(enum_class, one_hot_iterator):
-    enum_members = list(enum_class)
-    one_hot_list = [next(one_hot_iterator) for _ in range(len(enum_members))]
-    index = one_hot_list.index(1)
-    return enum_members[index]
