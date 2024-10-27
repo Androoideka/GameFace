@@ -52,6 +52,7 @@ class HairBrowColour(Enum):
     Fuchsia = "Fuchsia"
     AquaPurple = "AquaPurple"
     Teal = "Teal"
+    Blank = ""
 
 
 class BrowStyle(Enum):
@@ -91,7 +92,7 @@ class HairStyle(Enum):
     Unkempt = "Unkempt"
     Top_Bun = "Top_Bun"
     Cropped = "Cropped"
-    Colly_Mohawk = "Colly_Mohawk"
+    Coily_Mohawk = "Coily_Mohawk"
     Natural_Fade = "Natural_Fade"
     Short_Afro = "Short_Afro"
     Shaggy = "Shaggy"

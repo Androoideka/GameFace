@@ -93,6 +93,7 @@ class Sliders(Morph):
         mapping = {
             cls.get_enum_type()(slider["ID"]).name: slider["Value"]
             for slider in bone["SlidersA"]
+            if slider["ID"] != 0
         }
         return cls(**mapping)
 
