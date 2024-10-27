@@ -10,10 +10,10 @@ if not os.path.exists(presets_path):
     presets_path = os.path.join(home_path, presets_subpath)
 
 frame = {"top": 260, "left": 1250, "width": 900, "height": 900}
-vertical_center = frame["top"] + frame["height"] / 2
-horizontal_center = frame["left"] + frame["width"] / 2
-horizontal_start = frame["left"]
-horizontal_end = frame["left"] + frame["width"]
+vertical_center = frame["top"] + frame["height"] / 4
+horizontal_center = frame["left"] + frame["width"] / 4
+horizontal_start = frame["left"] - frame["width"] / 4
+horizontal_end = frame["left"] + frame["width"] / 2
 
 
 def load_preset(preset, name):
@@ -34,10 +34,11 @@ def to_presets_from_chargen():
 
 
 def to_left_angle():
-    pydirectinput.moveTo(horizontal_start, vertical_center, duration=1)
-    pydirectinput.dragTo(horizontal_end, vertical_center, button="right", duration=1)
+    pydirectinput.moveTo(horizontal_center, vertical_center, duration=1.0)
+    pydirectinput.dragTo(horizontal_end, vertical_center, button="right", duration=1.0)
 
 
 def to_right_angle():
-    pydirectinput.moveTo(horizontal_end, vertical_center, duration=1)
-    pydirectinput.dragTo(horizontal_center, vertical_center, button="right", duration=1)
+    pydirectinput.dragTo(
+        horizontal_start, vertical_center, button="right", duration=1.0
+    )

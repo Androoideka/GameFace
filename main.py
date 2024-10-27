@@ -9,15 +9,7 @@ def generate_training_data(presets):
             automation.load_preset(preset, f"preset{i}.npc")
             automation.to_chargen_from_presets()
 
-            forward_embedding = ai.calculate_embedding(sct, automation.frame)
-            automation.to_right_angle()
-            right_embedding = ai.calculate_embedding(sct, automation.frame)
-            automation.to_left_angle()
-            left_embedding = ai.calculate_embedding(sct, automation.frame)
-
-            embedding = ai.calculate_combined_embedding(
-                [forward_embedding, right_embedding, left_embedding]
-            )
+            embedding = ai.calculate_embedding(sct, automation.frame)
             embeddings.append(embedding)
 
             automation.to_presets_from_chargen()
