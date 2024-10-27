@@ -23,6 +23,21 @@ class FeatureBundle(Morph):
     nose: float = 0.0
 
     @classmethod
+    def from_json_morphs(cls, demographic, morphs):
+        dict = morphs.get(str(demographic.value), {})
+        mapping = {k.lower(): v for k, v in dict.items()}
+        return cls(**mapping)
+
+    @classmethod
+    def from_json_blends(cls, demographic, blends):
+        mapping = {
+            k.split("_")[-1].lower(): v
+            for k, v in blends.items()
+            if k.startswith(demographic.name)
+        }
+        return cls(**mapping)
+
+    @classmethod
     def from_bone(cls, demographic, bones):
         bone = next(
             (bone for bone in bones if bone["RegionID"] == demographic.value),
@@ -83,6 +98,15 @@ class Sliders(Morph):
     @classmethod
     def get_region(cls) -> int:
         raise NotImplementedError
+
+    @classmethod
+    def from_json(cls, sliders):
+        mapping = {
+            member.name: sliders[str(member.value)]
+            for member in cls.get_enum_type()
+            if str(member.value) in sliders
+        }
+        return cls(**mapping)
 
     @classmethod
     def from_bone(cls, bones):
@@ -304,6 +328,13 @@ class Body(Morph):
     def from_format(cls, format):
         values = (
             list(format["MorphWeights"].values()) + format["BodyMorphRegionValuesA"]
+        )
+        return cls(*values)
+
+    @classmethod
+    def from_json(cls, format):
+        values = list(format["Weight"].values()) + format.get(
+            "BodyMorphRegionValues", [0] * 5
         )
         return cls(*values)
 

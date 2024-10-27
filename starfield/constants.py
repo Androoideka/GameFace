@@ -26,6 +26,7 @@ class EyeColour(Enum):
     Iron = "Iron"
     Brown = "Brown"
     BrownDark = "BrownDark"
+    Blank = ""
 
 
 class HairBrowColour(Enum):

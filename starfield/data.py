@@ -77,13 +77,16 @@ class Character:
                 *[random.uniform(-1, 1) for _ in range(len(fields(classes.Forehead)))]
             ),
             bones={
-                member: classes.FeatureBundle(
-                    *[
-                        random.random()
-                        for _ in range(len(fields(classes.FeatureBundle)))
-                    ]
+                member: classes.FeatureBundle(*features)
+                for member, features in zip(
+                    constants.Demographic,
+                    utilities.transpose(
+                        [
+                            utilities.random_sum(len(constants.Demographic))
+                            for _ in fields(classes.FeatureBundle)
+                        ]
+                    ),
                 )
-                for member in constants.Demographic
             },
             sliders={
                 member: classes.FeatureBundle(*features)
@@ -167,6 +170,42 @@ class Character:
         )
 
     @classmethod
+    def from_json(cls, format):
+        return cls(
+            brow_hair_colour=constants.HairBrowColour(format["EyebrowColor"]),
+            eye_colour=constants.EyeColour(format["EyeColor"]),
+            hair_colour=constants.HairBrowColour(format["HairColor"]),
+            hair=constants.HairStyle.Straight_Bob,
+            eyebrow=constants.BrowStyle.Standard,
+            eyelash=constants.EyelashStyle.Style1,
+            skin_tone=format["SkinTone"],
+            body=classes.Body.from_json(format),
+            head_shape=classes.HeadShape.from_json(format["AdditionalSliders"]),
+            neck=classes.Neck.from_json(format["AdditionalSliders"]),
+            chin=classes.Chin.from_json(format["AdditionalSliders"]),
+            jaw=classes.Jaw.from_json(format["AdditionalSliders"]),
+            mouth=classes.Mouth.from_json(format["AdditionalSliders"]),
+            cheeks=classes.Cheeks.from_json(format["AdditionalSliders"]),
+            nose=classes.Nose.from_json(format["AdditionalSliders"]),
+            ears=classes.Ears.from_json(format["AdditionalSliders"]),
+            eyebrows=classes.Eyebrows.from_json(format["AdditionalSliders"]),
+            eyes=classes.Eyes.from_json(format["AdditionalSliders"]),
+            forehead=classes.Forehead.from_json(format["AdditionalSliders"]),
+            bones={
+                member: classes.FeatureBundle.from_json_morphs(
+                    member, format.get("Morphs", {})
+                )
+                for member in constants.Demographic
+            },
+            sliders={
+                member: classes.FeatureBundle.from_json_blends(
+                    member, format["ShapeBlendData"]
+                )
+                for member in constants.Demographic
+            },
+        )
+
+    @classmethod
     def from_format(cls, format):
         return cls(
             brow_hair_colour=constants.HairBrowColour(format["BrowHairColor"]),
@@ -212,8 +251,12 @@ class Character:
 
     @classmethod
     def from_file(cls, path):
-        with open(path, "r") as json_file:
-            return cls.from_format(json.load(json_file))
+        with open(path, "r") as file:
+            contents = json.load(file)
+            if path.endswith(".npc"):
+                return cls.from_format(contents)
+            elif path.endswith(".json"):
+                return cls.from_json(contents)
 
     def __getitem__(self, demographic):
         return (self.bones[demographic], self.sliders[demographic])
