@@ -6,7 +6,7 @@ pydirectinput.PAUSE = 1
 home_path = os.environ["USERPROFILE"]
 presets_subpath = r"Documents\My Games\Starfield\SFSE\Plugins\Chargen\Presets"
 presets_path = os.path.join(home_path, "OneDrive", presets_subpath)
-if os.path.exists(presets_path):
+if not os.path.exists(presets_path):
     presets_path = os.path.join(home_path, presets_subpath)
 
 frame = {"top": 260, "left": 1250, "width": 900, "height": 900}
