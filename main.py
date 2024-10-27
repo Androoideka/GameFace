@@ -1,4 +1,3 @@
-import os
 import ai
 from starfield import automation, data
 
@@ -10,7 +9,6 @@ def generate_training_data(presets):
             automation.load_preset(preset, f"preset{i}.npc")
             automation.to_chargen_from_presets()
 
-            ai.show_capture(sct, automation.frame)
             forward_embedding = ai.calculate_embedding(sct, automation.frame)
             automation.to_right_angle()
             right_embedding = ai.calculate_embedding(sct, automation.frame)
@@ -28,4 +26,4 @@ def generate_training_data(presets):
 
 training_data = generate_training_data([data.Character.from_random()])
 
-print(training_data)
+# print(training_data)
