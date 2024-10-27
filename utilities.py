@@ -20,7 +20,7 @@ def one_hot_decode(enum_class, one_hot_iterator):
 
 def random_sum(size):
     array = numpy.random.dirichlet(numpy.ones(size))
-    scale_factor = numpy.random.rand()
+    scale_factor = random.random()
     array *= scale_factor
     return array.tolist()
 
