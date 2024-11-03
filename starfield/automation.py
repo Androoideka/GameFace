@@ -1,6 +1,9 @@
 import os
+import win32api
+import win32con
 import pydirectinput
 
+scaling_factor = win32api.GetDeviceCaps(win32con.HDC(), win32con.LOGPIXELSX) / 96
 pydirectinput.PAUSE = 1
 
 home_path = os.environ["USERPROFILE"]
@@ -10,10 +13,11 @@ if not os.path.exists(presets_path):
     presets_path = os.path.join(home_path, presets_subpath)
 
 frame = {"top": 260, "left": 1250, "width": 900, "height": 900}
-vertical_center = frame["top"] + frame["height"] / 4
-horizontal_center = frame["left"] + frame["width"] / 4
-horizontal_start = frame["left"] - frame["width"] / 4
-horizontal_end = frame["left"] + frame["width"] / 2
+scaled_frame = frame / scaling_factor  # for dpi unaware libraruies
+vertical_center = scaled_frame["top"] + scaled_frame["height"] / 2
+horizontal_center = scaled_frame["left"] + scaled_frame["width"] / 2
+horizontal_start = scaled_frame["left"] - scaled_frame["width"] / 2
+horizontal_end = scaled_frame["left"] + scaled_frame["width"]
 
 
 def load_preset(preset, name):
