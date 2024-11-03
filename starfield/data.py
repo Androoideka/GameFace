@@ -107,14 +107,14 @@ class Character:
         iterator = iter(result)
         return cls(
             skin_tone=next(iterator),
-            brow_hair_colour=constants.one_hot_decode(
+            brow_hair_colour=utilities.one_hot_decode(
                 constants.HairBrowColour, iterator
             ),
-            eye_colour=constants.one_hot_decode(constants.EyeColour, iterator),
-            hair_colour=constants.one_hot_decode(constants.HairBrowColour, iterator),
-            hair=constants.one_hot_decode(constants.HairStyle, iterator),
-            eyebrow=constants.one_hot_decode(constants.BrowStyle, iterator),
-            eyelash=constants.one_hot_decode(constants.EyelashStyle, iterator),
+            eye_colour=utilities.one_hot_decode(constants.EyeColour, iterator),
+            hair_colour=utilities.one_hot_decode(constants.HairBrowColour, iterator),
+            hair=utilities.one_hot_decode(constants.HairStyle, iterator),
+            eyebrow=utilities.one_hot_decode(constants.BrowStyle, iterator),
+            eyelash=utilities.one_hot_decode(constants.EyelashStyle, iterator),
             body=classes.Body(
                 *utilities.partition_iterator(iterator, len(fields(classes.Body)))
             ),
@@ -264,12 +264,12 @@ class Character:
     def to_result(self):
         return (
             [self.skin_tone]
-            + constants.one_hot_encode(self.brow_hair_colour)
-            + constants.one_hot_encode(self.eye_colour)
-            + constants.one_hot_encode(self.hair_colour)
-            + constants.one_hot_encode(self.hair)
-            + constants.one_hot_encode(self.eyebrow)
-            + constants.one_hot_encode(self.eyelash)
+            + utilities.one_hot_encode(self.brow_hair_colour)
+            + utilities.one_hot_encode(self.eye_colour)
+            + utilities.one_hot_encode(self.hair_colour)
+            + utilities.one_hot_encode(self.hair)
+            + utilities.one_hot_encode(self.eyebrow)
+            + utilities.one_hot_encode(self.eyelash)
             + self.body.to_result()
             + self.head_shape.to_result()
             + self.neck.to_result()
