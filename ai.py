@@ -6,6 +6,19 @@ from deepface import DeepFace
 import torch
 import torch.nn
 import torch.optim
+from torch.utils.data import Dataset, DataLoader
+
+
+class GameData(Dataset):
+    def __init__(self, inputs, outputs):
+        self.inputs = torch.tensor(inputs, dtype=torch.float32)
+        self.outputs = torch.tensor(outputs, dtype=torch.float32)
+
+    def __len__(self):
+        return len(self.inputs)
+
+    def __getitem__(self, index):
+        return self.inputs[index], self.outputs[index]
 
 
 class NeuralNet(torch.nn.Module):
@@ -21,32 +34,47 @@ class NeuralNet(torch.nn.Module):
         return output
 
 
-def train(training_pairs, validation_pairs, epochs):
-    (example_input, example_result) = training_pairs[0]
-    model = NeuralNet(len(example_input), len(example_result))
+def train(model, training_loader, optimizer, loss_function):
+    model.train()
+    total_loss = 0
+    for batch_inputs, batch_outputs in training_loader:
+        optimizer.zero_grad()
+        outputs = model(batch_inputs)
+        loss = loss_function(outputs, batch_outputs)
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+    total_loss /= len(training_loader.dataset)
+    return total_loss
+
+
+def validate(model, validation_loader, loss_function):
+    model.eval()
+    loss = 0
+    with torch.no_grad():
+        for batch_inputs, batch_outputs in validation_loader:
+            outputs = model(batch_inputs)
+            loss += loss_function(outputs, batch_outputs).item()
+    loss /= len(validation_loader.dataset)
+    return loss
+
+
+def create_model(training_data, validation_data, epochs):
+    training_loader = DataLoader(
+        GameData(training_data[0], training_data[1]), batch_size=4, shuffle=True
+    )
+    validation_loader = DataLoader(
+        GameData(validation_data[0], validation_data[1]), batch_size=4, shuffle=True
+    )
+    model = NeuralNet(len(training_data[0][0]), len(training_data[1][0]))
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    loss_fn = torch.nn.MSELoss()
+    loss_function = torch.nn.MSELoss()
     best_validation_loss = float("inf")
     for epoch in range(epochs):
-        model.train()
-        for input, result in training_pairs:
-            optimizer.zero_grad()
-            print(input)
-            output = model(input)
-            training_loss = loss_fn(output, result)
-            training_loss.backward()
-            optimizer.step()
-
-        model.eval()
-        validation_loss = 0
-        with torch.no_grad():
-            for input, result in validation_pairs:
-                output = model(input)
-                validation_loss += loss_fn(output, result).item()
-        validation_loss /= len(validation_pairs)
-
+        training_loss = train(model, training_loader, optimizer, loss_function)
+        validation_loss = validate(model, validation_loader, loss_function)
         print(
-            f"Epoch {epoch+1}/{epochs}, Training Loss: {training_loss.item()}, Validation Loss: {validation_loss}"
+            f"Epoch {epoch+1}/{epochs}, Training Loss: {training_loss}, Validation Loss: {validation_loss}"
         )
         if validation_loss < best_validation_loss:
             best_validation_loss = validation_loss

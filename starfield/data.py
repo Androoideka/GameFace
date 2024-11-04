@@ -1,5 +1,6 @@
 import random
 import json
+import numpy
 import utilities
 from dataclasses import dataclass, fields
 from typing import Dict
@@ -262,7 +263,7 @@ class Character:
         return (self.bones[demographic], self.sliders[demographic])
 
     def to_result(self):
-        return (
+        return numpy.array(
             [self.skin_tone]
             + utilities.one_hot_encode(self.brow_hair_colour)
             + utilities.one_hot_encode(self.eye_colour)

@@ -20,8 +20,8 @@ horizontal_start = scaled_frame["left"] - scaled_frame["width"] / 2
 horizontal_end = scaled_frame["left"] + scaled_frame["width"]
 
 
-def load_preset(preset, name):
-    preset.to_file(os.path.join(presets_path, name))
+def show_preset(preset, name):
+    preset.to_file(os.path.join(presets_path, name + ".npc"))
     pydirectinput.press("b", duration=0.1)  # delete
     pydirectinput.press("enter", duration=0.1)
     pydirectinput.press("enter", duration=0.1)  # F9, save is F5
