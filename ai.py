@@ -110,10 +110,13 @@ def screenshot_context():
 
 def calculate_embedding(sct, frame):
     image = __screenshot(sct, frame)
-    embeddings = DeepFace.represent(
-        img_path=image, model_name="Facenet512", max_faces=1
-    )
-    return embeddings[0]["embedding"]
+    try:
+        embeddings = DeepFace.represent(
+            img_path=image, model_name="Facenet512", max_faces=1
+        )
+        return embeddings[0]["embedding"]
+    except Exception as e:
+        return None
 
 
 def calculate_combined_embedding(embeddings):

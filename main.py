@@ -33,7 +33,12 @@ def generate_presets(num):
 
 def save_data(presets, path):
     embeddings = get_embeddings(presets)
-    results = [preset.to_result() for preset in presets]
+    results = [
+        preset.to_result()
+        for preset, embedding in zip(presets, embeddings)
+        if embedding is not None
+    ]
+    embeddings = [embedding for embedding in embeddings if embedding is not None]
     numpy.savez_compressed(path, results=results, embeddings=embeddings)
 
 
@@ -43,9 +48,9 @@ def load_data(path):
 
 
 loaded_presets = load_presets("input")
-generated_training_presets = generate_presets(4)
-generated_validation_presets = generate_presets(4)
-save_data(generated_training_presets, "output/training.npz")
+generated_training_presets = generate_presets(466)
+generated_validation_presets = generate_presets(100)
+save_data(loaded_presets + generated_training_presets, "output/training.npz")
 save_data(generated_validation_presets, "output/validation.npz")
 
 ai.create_model(
