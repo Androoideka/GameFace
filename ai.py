@@ -78,7 +78,7 @@ def create_model(training_data, validation_data, epochs):
         )
         if validation_loss < best_validation_loss:
             best_validation_loss = validation_loss
-            torch.save(model.state_dict(), "model.pth")
+            torch.save(model.state_dict(), "output/model.pth")
             print(f"Best model saved with validation loss: {validation_loss}")
 
 
